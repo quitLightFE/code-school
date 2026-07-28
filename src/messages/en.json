@@ -1,0 +1,87 @@
+{
+  "RegisterPage": {
+    "title": "Study platform",
+    "subtitle": "Create an account to start to learn",
+    "fields": {
+      "name": "Username",
+      "namePlaceholder": "John_Doe",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "aria": {
+      "hidePassword": "Hide password",
+      "showPassword": "Show password",
+      "hideConfirmPassword": "Hide confirm password",
+      "showConfirmPassword": "Show confirm password"
+    },
+    "terms": "I agree with terms of studying",
+    "submitBtn": "Register for free",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginLink": "Login"
+  },
+  "LoginPage": {
+    "title": "Learning Platform",
+    "subtitle": "Sign in to your account to continue learning",
+    "usernameLabel": "Username",
+    "usernamePlaceholder": "Enter your username",
+    "passwordLabel": "Password",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password",
+    "submit": "Sign In",
+    "dontHaveAccount": "Don't have an account yet?",
+    "registerLink": "Register"
+  },
+  "Hero": {
+    "titleLine1": "Learn to Code",
+    "titleLine2": "Like Never Before",
+    "description": "Interactive courses with built-in code editor, instant feedback, and real-time collaboration. Perfect for beginners and experienced developers.",
+    "btnStart": "Start Learning Free",
+    "btnBrowse": "Browse Courses"
+  },
+  "CTASection": {
+    "title": "Ready to Start Your Coding Journey?",
+    "subtitle": "Join thousands of students learning to code with CODE School.",
+    "button": "Create Free Account"
+  }
+  ,
+  "LearningPlatform": {
+    "title": "Powerful Learning Platform",
+    "subtitle": "Everything you need to learn programming effectively",
+    "features": {
+      "editor": {
+        "title": "Interactive Code Editor",
+        "description": "Write, test, and run code directly in your browser with syntax highlighting and live preview."
+      },
+      "feedback": {
+        "title": "Instant Feedback",
+        "description": "Get immediate feedback on your code with automated tests and detailed explanations."
+      },
+      "speed": {
+        "title": "Learn Faster",
+        "description": "Structured curriculum designed to build real skills through hands-on practice."
+      },
+      "tracking": {
+        "title": "Progress Tracking",
+        "description": "Monitor your learning journey with detailed progress reports and achievements."
+      },
+      "expert": {
+        "title": "Expert Instruction",
+        "description": "Learn from industry professionals with years of experience teaching programming."
+      },
+      "community": {
+        "title": "Community",
+        "description": "Connect with other learners, ask questions, and share your projects."
+      }
+    }
+  },
+  
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "The address you are looking for does not exist, has been removed, or moved.",
+    "debugMessage": "Error report: requested route not found",
+    "goBack": "Go Back",
+    "goHome": "Go Home"
+  }
+
+}

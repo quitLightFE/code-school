@@ -1,0 +1,84 @@
+{
+  "RegisterPage": {
+    "title": "O'quv platformasi",
+    "subtitle": "O'qishni boshlash uchun hisob yarating",
+    "fields": {
+      "name": "Username",
+      "namePlaceholder": "Eshmat_Toshmatov",
+      "email": "Email",
+      "password": "Parol",
+      "confirmPassword": "Parolni takrorlang"
+    },
+    "aria": {
+      "hidePassword": "Parolni yashirish",
+      "showPassword": "Parolni ko'rsatish",
+      "hideConfirmPassword": "Takroriy parolni yashirish",
+      "showConfirmPassword": "Takroriy parolni ko'rsatish"
+    },
+    "terms": "O'qish shartlariga roziman",
+    "submitBtn": "Bepul ro'yxatdan o'tish",
+    "alreadyHaveAccount": "Hisobingiz bormi?",
+    "loginLink": "Kirish"
+  },
+  "LoginPage": {
+    "title": "Ta'lim platformasi",
+    "subtitle": "O'qishni davom ettirish uchun tizimga kiring",
+    "usernameLabel": "Username",
+    "usernamePlaceholder": "Username kiriting",
+    "passwordLabel": "Parol",
+    "hidePassword": "Parolni yashirish",
+    "showPassword": "Parolni ko'rsatish",
+    "submit": "Tizimga kirish",
+    "dontHaveAccount": "Sizda hali hisob yo'qmi?",
+    "registerLink": "Ro'yxatdan o'tish"
+  },
+  "Hero": {
+    "titleLine1": "Dasturlashni",
+    "titleLine2": "Biz bilan o'rganing",
+    "description": "O'rnatilgan kod muharriri, lahzali aloqa va real vaqtdagi hamkorlikka ega interaktiv kurslar. Boshlovchilar va tajribali dasturchilar uchun mukammal.",
+    "btnStart": "Bepul boshlash",
+    "btnBrowse": "Kurslarni ko'rish"
+  },
+  "CTASection": {
+    "title": "Dasturlash yo'lingizni boshlashga tayyormisiz?",
+    "subtitle": "CODE School bilan dasturlashni o'rganayotgan minglab talabalarga qo'shiling.",
+    "button": "Bepul hisob yaratish"
+  },
+  "LearningPlatform": {
+    "title": "Kuchli ta'lim platformasi",
+    "subtitle": "Dasturlashni samarali o'rganish uchun kerak bo'lgan barcha imkoniyatlar",
+    "features": {
+      "editor": {
+        "title": "Interaktiv kod muharriri",
+        "description": "Brauzeringizning o'zida sintaksis yoritilishi va jonli natija bilan kod yozing, sinang va ishga tushiring."
+      },
+      "feedback": {
+        "title": "Tezkor fikr-mulohaza",
+        "description": "Avtomatik testlar va batafsil tushuntirishlar orqali kodingiz bo'yicha darhol natija oling."
+      },
+      "speed": {
+        "title": "Tezroq o'rganing",
+        "description": "Amaliy mashg'ulotlarga asoslangan tuzilgan o'quv dasturi haqiqiy ko'nikmalarni rivojlantirishga yordam beradi."
+      },
+      "tracking": {
+        "title": "Progressni kuzatish",
+        "description": "Batafsil hisobotlar va yutuqlar orqali o'quv jarayoningizni kuzatib boring."
+      },
+      "expert": {
+        "title": "Tajribali ustozlar",
+        "description": "Ko'p yillik tajribaga ega dasturlash mutaxassislaridan ta'lim oling."
+      },
+      "community": {
+        "title": "Hamjamiyat",
+        "description": "Boshqa o'quvchilar bilan muloqot qiling, savollar bering va loyihalaringizni ulashing."
+      }
+    }
+  },
+  "NotFound": {
+    "title": "Sahifa topilmadi",
+    "description": "Siz qidirayotgan manzil mavjud emas, o‘chirilgan yoki boshqa joyga ko‘chirilgan.",
+    "debugMessage": "Xatolik haqida hisobot: so'ralgan marshrut topilmadi",
+    "goBack": "Orqaga qaytish",
+    "goHome": "Bosh sahifa"
+  }
+}
