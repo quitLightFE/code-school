@@ -6,7 +6,8 @@ import {
   Button,
   //Avatar,
   Chip,
-  Tabs
+  Tabs,
+  Label,
   //Tab
 } from "@heroui/react";
 import {
@@ -17,7 +18,7 @@ import {
   CheckCircle2,
   Calendar,
   ArrowRight,
-  Code2
+  Code2,
 } from "lucide-react";
 
 import { Link } from "#/i18n/navigation";
@@ -29,22 +30,22 @@ const studentStats = [
     label: "Стрик дней",
     value: "7 дней",
     icon: Flame,
-    color: "text-warning bg-warning-50/50"
+    color: "text-warning bg-warning-50/50",
   },
   {
     id: "hours",
     label: "Часов в коде",
     value: "42 ч.",
     icon: Clock,
-    olor: "text-primary bg-primary-50/50"
+    olor: "text-primary bg-primary-50/50",
   },
   {
     id: "completed",
     label: "Пройдено тем",
     value: "18/24",
     icon: CheckCircle2,
-    color: "text-success bg-success-50/50"
-  }
+    color: "text-success bg-success-50/50",
+  },
 ];
 
 const activeCourses = [
@@ -55,7 +56,7 @@ const activeCourses = [
       "Продвинутая разработка на Next.js 15, SSR, оптимизация и развертывание.",
     progress: 68,
     lastLesson: "Оптимизация изображений с помощью next/image",
-    category: "Frontend"
+    category: "Frontend",
   },
   {
     id: "2",
@@ -64,8 +65,8 @@ const activeCourses = [
       "Типизация интерфейсов, Generics, Utility Types и интеграция в React.",
     progress: 34,
     lastLesson: "Generic Constraints & Conditional Types",
-    category: "Языки"
-  }
+    category: "Языки",
+  },
 ];
 
 const upcomingDeadlines = [
@@ -74,22 +75,22 @@ const upcomingDeadlines = [
     title: "ДЗ: Настройка Middleware",
     course: "Next.js Pro",
     time: "Сегодня, 23:59",
-    type: "critical"
+    type: "critical",
   },
   {
     id: "d2",
     title: "Тест: Generics в TS",
     course: "TypeScript",
     time: "Завтра, 18:00",
-    type: "warning"
+    type: "warning",
   },
   {
     id: "d3",
     title: "Финальный проект",
     course: "Tailwind UI",
     time: "Через 4 дня",
-    type: "default"
-  }
+    type: "default",
+  },
 ];
 
 export default function DashboardPage() {
@@ -142,7 +143,7 @@ export default function DashboardPage() {
 
         {/* Сетка статистики */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {studentStats.map(stat => {
+          {studentStats.map((stat) => {
             const Icon = stat.icon;
             return (
               <Card
@@ -178,7 +179,7 @@ export default function DashboardPage() {
               </h2>
               <Tabs
                 // variant="underlined"
-                icolor="primary"
+                // color="primary"
                 aria-label="Фильтр курсов"
               >
                 <Tabs.ListContainer>
@@ -197,7 +198,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              {activeCourses.map(course => (
+              {activeCourses.map((course) => (
                 <Card
                   key={course.id}
                   //shadow="sm"
@@ -250,7 +251,7 @@ export default function DashboardPage() {
                         className="max-w-full"
                         value={course.progress}
                       >
-                        {/*<Label>Budget</Label>*/}
+                        <Label>{course.title}</Label>
                         <ProgressBar.Output />
                         <ProgressBar.Track>
                           <ProgressBar.Fill />
@@ -296,7 +297,7 @@ export default function DashboardPage() {
               className="border border-default-100"
             >
               <Card.Content className="p-4 space-y-4">
-                {upcomingDeadlines.map(deadline => (
+                {upcomingDeadlines.map((deadline) => (
                   <div
                     key={deadline.id}
                     className="flex items-start gap-3 p-2.5 rounded-xl transition-colors hover:bg-default-50"

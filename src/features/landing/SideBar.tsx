@@ -10,17 +10,14 @@ export default function SideBar() {
       <Button
         isIconOnly
         variant="ghost"
-        radius="full"
+        // radius="full"
         className="hover:bg-default-100"
       >
         <Menu className="size-5" />
       </Button>
 
       <Drawer.Backdrop variant="blur">
-        <Drawer.Content
-          placement="right"
-          className="border-l border-divider"
-        >
+        <Drawer.Content placement="right" className="border-l border-divider">
           <Drawer.Dialog className="flex h-full">
             <Drawer.CloseTrigger />
 
@@ -32,7 +29,7 @@ export default function SideBar() {
 
             <Drawer.Body className="flex flex-col justify-between py-5">
               <nav className="flex flex-col gap-2">
-                {navItems.map(item => (
+                {navItems.map((item) => (
                   <Link
                     key={item.title}
                     href={item.href}

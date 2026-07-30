@@ -3,13 +3,14 @@
 
 import Link from "next/link";
 import { useTheme } from "next-themes"; // если используете next-themes
-import {
-  FaTelegram,
-  FaVk,
-  FaYoutube,
-  FaInstagram,
-  FaLinkedin
-} from "react-icons/fa";
+// import {
+//   FaTelegram,
+//   FaVk,
+//   FaYoutube,
+//   FaInstagram,
+//   FaLinkedin,
+// } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -39,32 +40,50 @@ export default function Footer() {
                 href="#"
                 className="text-neutral-500 hover:text-blue-600 dark:hover:text-blue-500 transition-colors"
               >
-                <FaTelegram size={24} />
+                {/* <FaTelegram size={24} /> */}
+                <Image
+                  src={"/selfhst--telegram.svg"}
+                  width={24}
+                  height={24}
+                  alt="telegram"
+                />
               </a>
-              <a
+              {/* <a
                 href="#"
                 className="text-neutral-500 hover:text-blue-600 dark:hover:text-blue-500 transition-colors"
               >
                 <FaVk size={24} />
-              </a>
+              </a> */}
               <a
                 href="#"
                 className="text-neutral-500 hover:text-red-600 dark:hover:text-red-500 transition-colors"
               >
-                <FaYoutube size={24} />
+                {/* <FaYoutube size={24} /> */}
+                <Image
+                  src={"/selfhst--youtube.svg"}
+                  width={24}
+                  height={24}
+                  alt="youtube"
+                />
               </a>
               <a
                 href="#"
                 className="text-neutral-500 hover:text-pink-600 dark:hover:text-pink-500 transition-colors"
               >
-                <FaInstagram size={24} />
+                {/* <FaInstagram size={24} /> */}
+                <Image
+                  src={"/selfhst--instagram.svg"}
+                  width={24}
+                  height={24}
+                  alt="instagram"
+                />
               </a>
-              <a
+              {/* <a
                 href="#"
                 className="text-neutral-500 hover:text-blue-700 dark:hover:text-blue-500 transition-colors"
               >
                 <FaLinkedin size={24} />
-              </a>
+              </a> */}
             </div>
           </div>
 

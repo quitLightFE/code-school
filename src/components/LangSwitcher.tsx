@@ -3,6 +3,7 @@
 import { Dropdown, Button, Label, Selection } from "@heroui/react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "#/i18n/navigation";
+import Image from "next/image";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
@@ -36,15 +37,42 @@ export default function LanguageSwitcher() {
           <Dropdown.Section>
             <Dropdown.Item id="ru" textValue="Русский">
               <Dropdown.ItemIndicator />
-              <Label>🇷🇺 Русский</Label>
+              <Label style={{ display: "flex", gap: 4 }}>
+                <Image
+                  alt="ru"
+                  src={"/twemoji--flag-russia.svg"}
+                  width={16}
+                  height={16}
+                  loading="lazy"
+                />
+                Русский
+              </Label>
             </Dropdown.Item>
             <Dropdown.Item id="uz" textValue="O'zbekcha">
               <Dropdown.ItemIndicator />
-              <Label>🇺🇿 O'zbekcha</Label>
+              <Label style={{ display: "flex", gap: 4 }}>
+                <Image
+                  alt="ru"
+                  src={"/twemoji--flag-uzbekistan.svg"}
+                  width={16}
+                  height={16}
+                  loading="lazy"
+                />
+                O'zbekcha
+              </Label>
             </Dropdown.Item>
             <Dropdown.Item id="en" textValue="English">
               <Dropdown.ItemIndicator />
-              <Label>🇬🇧 English</Label>
+              <Label style={{ display: "flex", gap: 4 }}>
+                <Image
+                  alt="ru"
+                  src={"/twemoji--flag-united-kingdom.svg"}
+                  width={16}
+                  height={16}
+                  loading="lazy"
+                />
+                English
+              </Label>
             </Dropdown.Item>
           </Dropdown.Section>
         </Dropdown.Menu>

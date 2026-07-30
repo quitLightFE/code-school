@@ -163,7 +163,7 @@ export default function CoursesPage() {
               aria-label="Выбор категории"
               //radius="full"
               //variant="bordered"
-              selectedKeys={[selectedCategory]}
+              selectedKey={selectedCategory}
               //onChange={(e, k) => setSelectedCategory(k)}
 
               onChange={v => setSelectedCategory(v)}
