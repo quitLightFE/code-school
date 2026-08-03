@@ -26,7 +26,7 @@ export default function LoginPage() {
     try {
       await login({
         username,
-        password
+        password,
       });
 
       router.replace("/dashboard");
@@ -69,7 +69,7 @@ export default function LoginPage() {
                 placeholder={t("usernamePlaceholder")}
                 autoComplete="username"
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </InputGroup>
           </TextField>
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 type={isPasswordVisible ? "text" : "password"}
                 autoComplete="current-password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <InputGroup.Suffix>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                   aria-label={
                     isPasswordVisible ? t("hidePassword") : t("showPassword")
                   }
-                  onPress={() => setIsPasswordVisible(value => !value)}
+                  onPress={() => setIsPasswordVisible((value) => !value)}
                 >
                   {isPasswordVisible ? (
                     <EyeOff className="size-4" />

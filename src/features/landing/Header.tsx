@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react"
 import ThemeButton from "#/components/ThemeButton";
 import LanguageSwitcher from "#/components/LangSwitcher";
 import SideBar from "#/features/landing/SideBar";
 import { NavigationItems } from "#/features/NavigationItems";
 import { Link } from "#/i18n/navigation";
+import { useAuthContext } from "#/providers/AuthProvider";
+import { Avatar, Button, Dropdown, Label } from "@heroui/react";
 
 export default function Header() {
-  const [open, setOpen] = useState(false);
+  const { user, loading, logout } = useAuthContext();
+
+  const initials = user?.username?.[0];
+
   return (
     <header className="fixed inset-x-3 top-3 z-40 sm:inset-x-5 sm:top-5">
       <div
@@ -57,7 +61,7 @@ export default function Header() {
                     {item.title}
                   </Link>
                 </li>
-              )
+              ),
             )}
           </ul>
         </nav>
@@ -68,18 +72,98 @@ export default function Header() {
 
           <ThemeButton />
           {/*<SunMoon className="size-5" />*/}
-
-          <Link href="/login" className="button button--ghost hidden sm:flex">
-            Log In
-          </Link>
-
-          <Link
-            href="/register"
-            className="button button--primary hidden sm:flex"
-          >
-            Sign Up
-          </Link>
-
+          {user ? (
+            <div className="flex items-center gap-4">
+              {/* <span>
+                Привет, <strong>{user.username || user.email}</strong>!
+              </span> */}
+              {/* <Button
+                onClick={logout}
+                variant="danger"
+                className="px-3 py-1 text-sm bg-red-500 text-white"
+              >
+                Выйти
+              </Button> */}
+              <Dropdown>
+                <Dropdown.Trigger className="rounded-full">
+                  <Avatar>
+                    {/* <Avatar.Image
+                      alt="Junior Garcia"
+                      src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
+                    /> */}
+                    <Avatar.Fallback>{initials}</Avatar.Fallback>
+                  </Avatar>
+                </Dropdown.Trigger>
+                <Dropdown.Popover>
+                  <div className="px-3 pt-3 pb-1">
+                    <div className="flex items-center gap-2">
+                      <Avatar size="sm">
+                        {/* <Avatar.Image
+                          alt="Jane"
+                          src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
+                        /> */}
+                        <Avatar.Fallback>{initials}</Avatar.Fallback>
+                      </Avatar>
+                      <div className="flex flex-col gap-0">
+                        <p className="text-sm leading-5 font-medium">
+                          {user.username}
+                        </p>
+                        <p className="text-xs leading-none text-muted">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <Dropdown.Menu>
+                    <Dropdown.Item id="dashboard" textValue="Dashboard">
+                      <Label>Dashboard</Label>
+                    </Dropdown.Item>
+                    <Dropdown.Item id="profile" textValue="Profile">
+                      <Label>Profile</Label>
+                    </Dropdown.Item>
+                    <Dropdown.Item id="settings" textValue="Settings">
+                      <div className="flex w-full items-center justify-between gap-2">
+                        <Label>Settings</Label>
+                        {/* <Gear className="size-3.5 text-muted" /> */}
+                      </div>
+                    </Dropdown.Item>
+                    <Dropdown.Item id="new-project" textValue="New project">
+                      <div className="flex w-full items-center justify-between gap-2">
+                        <Label>Create Team</Label>
+                        {/* <Persons className="size-3.5 text-muted" /> */}
+                      </div>
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      id="logout"
+                      textValue="Logout"
+                      variant="danger"
+                      onPress={logout}
+                    >
+                      <div className="flex w-full items-center justify-between gap-2">
+                        <Label>Log Out</Label>
+                        {/* <ArrowRightFromSquare className="size-3.5 text-danger" /> */}
+                      </div>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown.Popover>
+              </Dropdown>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="button button--ghost hidden sm:flex"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/register"
+                className="button button--primary hidden sm:flex"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
           {/* Mobile menu */}
           <div className="sm:hidden">
             <SideBar />
