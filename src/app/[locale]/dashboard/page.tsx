@@ -111,7 +111,7 @@ export default function DashboardPage() {
 
           {/* Виджет быстрого фокуса (Last Action) */}
           <Card
-            className="border-none bg-gradient-to-br from-primary-500/10 via-primary-500/5 to-transparent shadow-md"
+            className="border-none bg-linear-to-br from-primary-500/10 via-primary-500/5 to-transparent shadow-md"
             // radius="lg"
           >
             <Card.Content className="flex flex-row items-center justify-between p-4 gap-4">
@@ -261,7 +261,7 @@ export default function DashboardPage() {
                   </Card.Content>
                   <Card.Footer className="border-t border-default-100 bg-default-50/30 px-5 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <BookOpen className="size-4 text-default-400 flex-shrink-0" />
+                      <BookOpen className="size-4 text-default-400 shrink-0" />
                       <p className="text-xs text-default-400 truncate">
                         <span className="font-medium text-default-600">
                           Далее:
@@ -283,7 +283,7 @@ export default function DashboardPage() {
 
           {/* Правая колонка: Дедлайны & Ближайшие события (1/3 ширины) */}
           <section className="space-y-4">
-            <div className="h-[40px] flex items-center">
+            <div className="h-10 flex items-center">
               {" "}
               {/* Выравнивание по высоте заголовка табов слева */}
               <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
@@ -320,7 +320,7 @@ export default function DashboardPage() {
                       <div className="flex items-center justify-between gap-2 text-xs text-default-400">
                         <span className="truncate">{deadline.course}</span>
                         <span
-                          className={`font-medium flex-shrink-0 ${deadline.type === "critical" ? "text-danger" : ""}`}
+                          className={`font-medium shrink-0 ${deadline.type === "critical" ? "text-danger" : ""}`}
                         >
                           {deadline.time}
                         </span>

@@ -14,7 +14,8 @@ import {
   CheckboxGroup,
   Checkbox,
   Separator,
-  Key
+  Key,
+  Label,
 } from "@heroui/react";
 import {
   Search,
@@ -24,7 +25,7 @@ import {
   Clock,
   BookOpen,
   ChevronRight,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
 // Mock-данные категорий и уровней
@@ -33,13 +34,13 @@ const categories = [
   { key: "frontend", label: "Frontend Разработка" },
   { key: "backend", label: "Backend Разработка" },
   { key: "qa", label: "Тестирование (QA)" },
-  { key: "design", label: "UI/UX Дизайн" }
+  { key: "design", label: "UI/UX Дизайн" },
 ];
 
 const levels = [
   { value: "beginner", label: "Для новичков" },
   { value: "intermediate", label: "Middle уровень" },
-  { value: "advanced", label: "Senior / Продвинутый" }
+  { value: "advanced", label: "Senior / Продвинутый" },
 ];
 
 const mockCourses = [
@@ -54,7 +55,7 @@ const mockCourses = [
     duration: "72 часа",
     lessonsCount: 48,
     rating: 4.9,
-    isPopular: true
+    isPopular: true,
   },
   {
     id: "ts-hardcore",
@@ -67,7 +68,7 @@ const mockCourses = [
     duration: "36 часов",
     lessonsCount: 24,
     rating: 5.0,
-    isPopular: false
+    isPopular: false,
   },
   {
     id: "node-architecture",
@@ -80,7 +81,7 @@ const mockCourses = [
     duration: "90 часов",
     lessonsCount: 64,
     rating: 4.8,
-    isPopular: true
+    isPopular: true,
   },
   {
     id: "html-css-start",
@@ -93,8 +94,8 @@ const mockCourses = [
     duration: "40 часов",
     lessonsCount: 32,
     rating: 4.7,
-    isPopular: false
-  }
+    isPopular: false,
+  },
 ];
 
 export default function CoursesPage() {
@@ -103,7 +104,7 @@ export default function CoursesPage() {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
 
   // Логика фильтрации
-  const filteredCourses = mockCourses.filter(course => {
+  const filteredCourses = mockCourses.filter((course) => {
     const matchesSearch =
       course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -143,7 +144,7 @@ export default function CoursesPage() {
         {/* Инструменты поиска и фильтрации для мобильных устройств (Быстрый выбор) */}
         <section className="grid grid-cols-1 gap-4 md:grid-cols-4 items-center">
           <div className="md:col-span-2">
-            <TextField>
+            <TextField aria-label="search courses from key words">
               <InputGroup>
                 <InputGroup.Prefix>
                   <Search className="size-4 text-default-400" />
@@ -152,7 +153,7 @@ export default function CoursesPage() {
                   className="w-full rounded-full"
                   placeholder="Поиск по названию или ключевым словам..."
                   value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   // variant="bordered"
                 />
               </InputGroup>
@@ -166,7 +167,7 @@ export default function CoursesPage() {
               selectedKey={selectedCategory}
               //onChange={(e, k) => setSelectedCategory(k)}
 
-              onChange={v => setSelectedCategory(v)}
+              onChange={(v) => setSelectedCategory(v)}
               className="w-full"
             >
               <Select.Trigger>
@@ -175,7 +176,7 @@ export default function CoursesPage() {
               </Select.Trigger>
               <Select.Popover>
                 <ListBox>
-                  {categories.map(category => (
+                  {categories.map((category) => (
                     <ListBox.Item
                       key={category.key}
                       id={category.key}
@@ -219,13 +220,13 @@ export default function CoursesPage() {
                     // color="primary"
                     // size="sm"
                   >
-                    {levels.map(level => (
+                    {levels.map((level) => (
                       <Checkbox key={level.value} value={level.value}>
                         <Checkbox.Content>
                           <Checkbox.Control>
                             <Checkbox.Indicator />
                           </Checkbox.Control>
-                          {level.label}
+                          <Label>{level.label}</Label>
                         </Checkbox.Content>
                       </Checkbox>
                     ))}
@@ -287,7 +288,7 @@ export default function CoursesPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredCourses.map(course => (
+                {filteredCourses.map((course) => (
                   <Card
                     key={course.id}
                     // shadow="sm"
@@ -332,7 +333,7 @@ export default function CoursesPage() {
                           {course.title}
                         </h3>
                         <p className="text-xs text-default-400 font-medium">
-                          {levels.find(l => l.value === course.level)?.label}
+                          {levels.find((l) => l.value === course.level)?.label}
                         </p>
                         <p className="text-sm text-default-500 line-clamp-3 pt-1">
                           {course.description}

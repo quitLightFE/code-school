@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Логотип и описание */}
           <div className="md:col-span-5">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-violet-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">
+              <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-violet-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl">
                 C
               </div>
               <div>

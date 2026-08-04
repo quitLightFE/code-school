@@ -6,15 +6,15 @@ import SideBar from "#/features/landing/SideBar";
 import { NavigationItems } from "#/features/NavigationItems";
 import { Link } from "#/i18n/navigation";
 import { useAuthContext } from "#/providers/AuthProvider";
-import { Avatar, Button, Dropdown, Label } from "@heroui/react";
+import { UserDropdown } from "#/components/UserDropdown";
 
 export default function Header() {
-  const { user, loading, logout } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
-  const initials = user?.username?.[0];
+  const initials = user?.username?.slice(0, 2).toUpperCase() || "--";
 
   return (
-    <header className="fixed inset-x-3 top-3 z-40 sm:inset-x-5 sm:top-5">
+    <header className="fixed inset-x-3 top-3 z-40 sm:inset-x-5 sm:top-5 max-w-200 mx-auto">
       <div
         className={`
           flex items-center justify-between
@@ -69,96 +69,22 @@ export default function Header() {
         {/* Actions */}
         <div className="flex items-center gap-1.5">
           <LanguageSwitcher />
-
           <ThemeButton />
-          {/*<SunMoon className="size-5" />*/}
           {user ? (
-            <div className="flex items-center gap-4">
-              {/* <span>
-                Привет, <strong>{user.username || user.email}</strong>!
-              </span> */}
-              {/* <Button
-                onClick={logout}
-                variant="danger"
-                className="px-3 py-1 text-sm bg-red-500 text-white"
-              >
-                Выйти
-              </Button> */}
-              <Dropdown>
-                <Dropdown.Trigger className="rounded-full">
-                  <Avatar>
-                    {/* <Avatar.Image
-                      alt="Junior Garcia"
-                      src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
-                    /> */}
-                    <Avatar.Fallback>{initials}</Avatar.Fallback>
-                  </Avatar>
-                </Dropdown.Trigger>
-                <Dropdown.Popover>
-                  <div className="px-3 pt-3 pb-1">
-                    <div className="flex items-center gap-2">
-                      <Avatar size="sm">
-                        {/* <Avatar.Image
-                          alt="Jane"
-                          src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
-                        /> */}
-                        <Avatar.Fallback>{initials}</Avatar.Fallback>
-                      </Avatar>
-                      <div className="flex flex-col gap-0">
-                        <p className="text-sm leading-5 font-medium">
-                          {user.username}
-                        </p>
-                        <p className="text-xs leading-none text-muted">
-                          {user.email}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <Dropdown.Menu>
-                    <Dropdown.Item id="dashboard" textValue="Dashboard">
-                      <Label>Dashboard</Label>
-                    </Dropdown.Item>
-                    <Dropdown.Item id="profile" textValue="Profile">
-                      <Label>Profile</Label>
-                    </Dropdown.Item>
-                    <Dropdown.Item id="settings" textValue="Settings">
-                      <div className="flex w-full items-center justify-between gap-2">
-                        <Label>Settings</Label>
-                        {/* <Gear className="size-3.5 text-muted" /> */}
-                      </div>
-                    </Dropdown.Item>
-                    <Dropdown.Item id="new-project" textValue="New project">
-                      <div className="flex w-full items-center justify-between gap-2">
-                        <Label>Create Team</Label>
-                        {/* <Persons className="size-3.5 text-muted" /> */}
-                      </div>
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      id="logout"
-                      textValue="Logout"
-                      variant="danger"
-                      onPress={logout}
-                    >
-                      <div className="flex w-full items-center justify-between gap-2">
-                        <Label>Log Out</Label>
-                        {/* <ArrowRightFromSquare className="size-3.5 text-danger" /> */}
-                      </div>
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown.Popover>
-              </Dropdown>
+            <div className="items-center gap-4 sm:flex hidden">
+              <UserDropdown user={user} logout={logout} initials={initials} />
             </div>
           ) : (
             <>
               <Link
                 href="/login"
-                className="button button--ghost hidden sm:flex"
+                className="button button--ghost hidden sm:flex focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2"
               >
                 Log In
               </Link>
               <Link
                 href="/register"
-                className="button button--primary hidden sm:flex"
+                className="button button--primary hidden sm:flex focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2"
               >
                 Sign Up
               </Link>
@@ -173,65 +99,3 @@ export default function Header() {
     </header>
   );
 }
-
-// "use client";
-
-// import ThemeButton from "#/components/ThemeButton";
-// import { Button } from "@heroui/react";
-// import SideBar from "#/features/landing/SideBar";
-// import { Menu, SunMoon } from "lucide-react";
-
-// import { NavigationItems } from "#/features/NavigationItems";
-
-// import LanguageSwitcher from "#/components/LangSwitcher";
-
-// // import NextLink from "next/link";
-// import { Link } from "#/i18n/navigation";
-
-// export default function Header() {
-//   return (
-//     <div className="flex gap-2 fixed top-3 left-3 sm:left-5 right-3 sm:right-5 sm:top-5 z-40 px-3 sm:px-5">
-//       <div className="backdrop-blur-sm flex w-full border-b border-separator bg-background/70 rounded-[50px] border border-white/20 shadow-lg">
-//         <nav className="w-full">
-//           <header className="flex items-center justify-between sm:p-5 sm:ps-6 ps-3  p-2">
-//             <div className="flex items-center gap-3">
-//               {/* <Logo /> */}
-//               <Link href="/" className="font-bold">Code School</Link>
-//             </div>
-//             <ul className="items-center gap-2 sm:flex hidden">
-//               {/* for unique key */}
-//               {NavigationItems.map((item, i) => (
-//                 <li key={item.title + i}>
-//                   <Link href={item.href}>{item.title}</Link>
-//                 </li>
-//               ))}
-//             </ul>
-//             <ul className="flex items-center sm:gap-2 gap-1">
-//               <li>
-//                 <LanguageSwitcher />
-//               </li>
-//               <li>
-//                 <ThemeButton isIconOnly variant="ghost">
-//                   <SunMoon />
-//                 </ThemeButton>
-//               </li>
-//               <li className="hidden sm:flex">
-//                 <Link href="/login" className="button button--ghost">
-//                   Log In
-//                 </Link>
-//               </li>
-//               <li className="hidden sm:flex">
-//                 <Link href="/register" className="button button--primary">
-//                   Sign Up
-//                 </Link>
-//               </li>
-//             </ul>
-//           </header>
-//         </nav>
-//       </div>
-//       <div className="backdrop-blur-sm sm:hidden flex border-b border-separator bg-background/70 rounded-[50px] border border-white/20 shadow-lg sm:p-5 p-2 items-center justify-center">
-//         <SideBar />
-//       </div>
-//     </div>
-//   );
-// }

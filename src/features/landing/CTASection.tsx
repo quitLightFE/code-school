@@ -22,7 +22,10 @@ import { Link } from "#/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 // Кастомная иконка стрелки для соответствия макету
-export const ArrowRightIcon = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
+export const ArrowRightIcon = ({
+  className,
+  ...props
+}: React.SVGProps<SVGSVGElement>) => (
   <svg
     aria-hidden="true"
     fill="none"
@@ -48,7 +51,7 @@ export default function CodingJourneyCTA() {
   const t = useTranslations("CTASection");
 
   return (
-    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#3a68f6] via-[#854bf1] to-[#ca32eb] px-6 py-20 text-center text-white sm:py-28 md:px-12">
+    <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-linear-to-br from-[#3a68f6] via-[#854bf1] to-[#ca32eb] px-6 py-20 text-center text-white sm:py-28 md:px-12">
       <div className="z-10 flex max-w-4xl flex-col items-center gap-6">
         {/* Заголовок */}
         <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">

@@ -12,16 +12,16 @@ export default function HeroSection() {
   const t = useTranslations("Hero");
 
   return (
-    <section className="pt-18 relative min-h-[100dvh] w-full px-6 pb-10 md:px-12 md:py-32 flex items-center justify-center overflow-hidden">
+    <section className="pt-18 relative min-h-dvh w-full px-6 pb-10 md:px-12 md:py-32 flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-gradient-to-b from-blue-500/20 via-violet-500/15 to-transparent blur-[100px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-250 h-112.5 bg-linear-to-b from-blue-500/20 via-violet-500/15 to-transparent blur-[100px]" />
       </div>
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
         {/* ЛЕВАЯ КОЛОНКА: Контент и Действия */}
         <div className="lg:col-span-6 flex flex-col justify-center text-left">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
             {t("titleLine1")} <br />
-            <span className="bg-gradient-to-r from-blue-500 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-blue-500 to-indigo-400 bg-clip-text text-transparent">
               {t("titleLine2")}
             </span>
           </h1>

@@ -1,7 +1,3 @@
-// export default function NotFound() {
-//   return <h1>Inner 404</h1>;
-// }
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -16,12 +12,12 @@ export default function NotFound() {
   return (
     <div className="relative min-h-[80vh] w-full flex flex-col items-center justify-center overflow-hidden px-4 py-12">
       {/* Декоративный IT-фон (светящиеся сферы) */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
-      <div className="absolute bottom-1/4 left-1/3 w-[250px] h-[250px] bg-secondary/10 rounded-full blur-[60px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-75 h-75 sm:w-125 sm:h-125 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute bottom-1/4 left-1/3 w-62.5 h-62.5 bg-secondary/10 rounded-full blur-[60px] pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-lg mx-auto">
         {/* Иконка / Графика ошибки */}
-        <div className="relative mb-6 p-4 rounded-2xl bg-content2 border border-content3 shadow-sm animate-bounce [animation-duration:3s]">
+        <div className="relative mb-6 p-4 rounded-2xl bg-content2 border border-content3 shadow-sm animate-bounce animation-duration-[3s]">
           <AlertTriangle className="w-12 h-12 text-warning" />
           <Terminal className="w-6 h-6 text-primary absolute -bottom-1 -right-1 bg-content1 rounded-md p-1 border border-content3" />
         </div>
@@ -36,7 +32,7 @@ export default function NotFound() {
         </Code>
 
         {/* Заголовки */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3 bg-gradient-to-r from-foreground to-foreground-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3 bg-linear-to-r from-foreground to-foreground-600 bg-clip-text text-transparent">
           {t("title")}
         </h1>
 
