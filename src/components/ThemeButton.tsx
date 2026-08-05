@@ -29,7 +29,10 @@ export default function ThemeDropdown({ ...props }: ThemeDropdownProps) {
 
   // Иконка для самой кнопки (триггера)
   const getCurrentIcon = () => {
-    if (!mounted) return <Monitor className="w-4 h-4" />; // Дефолт до гидратации
+    if (!mounted)
+      return (
+        <div className="h-9 w-9 animate-pulse rounded-full bg-gray-700/50" />
+      ); // Дефолт до гидратации
     if (theme === "light") return <Sun className="w-4 h-4" />;
     if (theme === "dark") return <Moon className="w-4 h-4" />;
     return <Monitor className="w-4 h-4" />;

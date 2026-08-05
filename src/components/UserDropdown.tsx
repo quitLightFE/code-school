@@ -10,15 +10,6 @@ import {
 import { useState } from "react";
 import { User } from "#/types/auth";
 import AlertLogOut from "#/components/Header/AlertLogout";
-// import React, { useState } from "react";
-// import {
-//   Dropdown,
-//   Avatar,
-//   Label,
-//   AlertDialog,
-//   Button
-// } from "@heroui/react";
-
 export function UserDropdown({
   user,
   initials,

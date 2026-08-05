@@ -9,7 +9,7 @@ import { useAuthContext } from "#/providers/AuthProvider";
 import { UserDropdown } from "#/components/UserDropdown";
 
 export default function Header() {
-  const { user, logout } = useAuthContext();
+  const { user, loading, logout } = useAuthContext();
 
   const initials = user?.username?.slice(0, 2).toUpperCase() || "--";
 
@@ -70,8 +70,13 @@ export default function Header() {
         <div className="flex items-center gap-1.5">
           <LanguageSwitcher />
           <ThemeButton />
-          {user ? (
-            <div className="items-center gap-4 sm:flex hidden">
+          {loading ? (
+            <div className="hidden sm:flex items-center gap-3">
+              <div className="h-9 w-9 animate-pulse rounded-full bg-gray-700/50" />
+              {/* <div className="h-9 w-19 animate-pulse rounded-full bg-gray-700/50" /> */}
+            </div>
+          ) : user ? (
+            <div className="hidden sm:flex items-center gap-4">
               <UserDropdown user={user} logout={logout} initials={initials} />
             </div>
           ) : (
@@ -82,6 +87,7 @@ export default function Header() {
               >
                 Log In
               </Link>
+
               <Link
                 href="/register"
                 className="button button--primary hidden sm:flex focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2"

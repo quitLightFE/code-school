@@ -259,15 +259,15 @@ export default function ProfilePage() {
                           <ShieldCheck className="size-4 text-default-400" />
                         </InputGroup.Prefix>
                         <InputGroup.Input
-                          aria-label="Username"
-                          placeholder="Enter your username"
-                          value={formData.username}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              username: e.target.value,
-                            })
-                          }
+                          aria-label="Role"
+                          placeholder="Enter your role"
+                          // value={formData.username}
+                          // onChange={() =>
+                          //   setFormData({
+                          //     ...formData,
+                          //     role: e.target.value,
+                          //   })
+                          // }
                         />
                       </InputGroup>
                       <Label className="font-medium">Role</Label>
