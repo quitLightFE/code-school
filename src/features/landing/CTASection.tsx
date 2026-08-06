@@ -66,7 +66,8 @@ export default function CodingJourneyCTA() {
         {/* Интерактивная кнопка HeroUI v3 */}
         <Link
           href="/register"
-          className="button button--primary button--lg mt-4 bg-white font-medium text-[#2563eb] shadow-md hover:scale-[1.02] active:scale-[0.98] transition-transform"
+          className="button button--primary button--lg mt-4 bg-white font-medium text-[#2563eb] shadow-md hover:scale-[1.02] active:scale-[0.98] 
+          transition-transform focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2"
         >
           {t("button")}
           <ArrowRightIcon className="w-4 h-4" />

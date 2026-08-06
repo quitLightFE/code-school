@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, LogOut, User as UserIcon } from "lucide-react";
-import { Button, Drawer, Avatar, AlertDialog } from "@heroui/react";
+import {
+  Menu,
+  LogOut,
+  User as UserIcon,
+  Settings as SettingsIcon,
+} from "lucide-react";
+import { Button, Drawer, Avatar } from "@heroui/react";
 
 import { Link } from "#/i18n/navigation";
 import { NavigationItems as navItems } from "#/features/NavigationItems";
@@ -115,6 +120,14 @@ export default function SideBar() {
                         >
                           <UserIcon className="size-4 text-default-500" />
                           Profile
+                        </Link>
+                        <Link
+                          href="/profile"
+                          onClick={handleLinkClick}
+                          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium hover:bg-default-100"
+                        >
+                          <SettingsIcon className="size-4 text-default-500" />
+                          Settings
                         </Link>
                       </div>
 

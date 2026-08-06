@@ -34,14 +34,14 @@ export default function HeroSection() {
             {/* Кнопка "Start Learning Free" */}
             <Link
               href="/register"
-              className="button button--lg button--primary font-medium px-8 shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2"
+              className="button button--lg button--primary font-medium px-8 shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2"
             >
               {t("btnStart")} <ArrowRightIcon className="w-4 h-4" />
             </Link>
 
             {/* Кнопка "Browse Courses" */}
             <Link
-              className="button button--outline border-slate-700 hover:border-slate-500 font-medium px-8 transition-all button--lg"
+              className="button button--outline border-slate-700 hover:border-slate-500 font-medium px-8 transition-all button--lg focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2"
               href="/courses"
             >
               {t("btnBrowse")}
