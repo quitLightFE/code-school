@@ -23,9 +23,9 @@
   "LoginPage": {
     "title": "Learning Platform",
     "subtitle": "Sign in to your account to continue learning",
-    "usernameLabel": "Username",
-    "usernamePlaceholder": "Enter your username",
-    "passwordLabel": "Password",
+    "usernameLabel": "Email",
+    "usernamePlaceholder": "Enter your email",
+    "passwordLabel": "Email",
     "hidePassword": "Hide password",
     "showPassword": "Show password",
     "submit": "Sign In",

@@ -9,7 +9,7 @@ import { hasLocale } from "next-intl";
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
   const messages = await getMessages();
@@ -18,7 +18,11 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className="scrollbar-gutter-stable"
+    >
       <body>
         <Providers locale={locale} messages={messages} timeZone="UTC">
           <Header />

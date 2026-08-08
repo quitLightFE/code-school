@@ -29,14 +29,14 @@ export default function ProfilePage() {
   const { user } = useAuthContext();
 
   const [formData, setFormData] = useState({
-    username: user?.username || "",
+    username: user?.name || "",
     email: user?.email || "",
   });
   const [isSaving, setIsSaving] = useState(false);
 
   // Имитация роли, если контекст пуст (для безопасного рендера)
   const isTeacher = user?.role === "teacher";
-  const initials = user?.username?.substring(0, 2).toUpperCase() || "--";
+  const initials = user?.name?.substring(0, 2).toUpperCase() || "--";
 
   const handleProfileUpdate = async (e: React.SubmitEvent) => {
     e.preventDefault();
@@ -82,7 +82,7 @@ export default function ProfilePage() {
               <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                    {user.username}
+                    {user.name}
                   </h1>
                   <Chip
                     size="sm"

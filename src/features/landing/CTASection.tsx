@@ -1,22 +1,5 @@
-// "use client";
-
-// import { Button } from "@heroui/react";
-
-// export default function CTASection() {
-//   return (
-//     <section className="bg-gradient-to-br from-blue-700 to-purple-700">
-//       <div className="flex text-white flex-col space-y-2.5 items-center py-16">
-//         <h2 className="text-2xl">Ready to start your coding journey?</h2>
-//         <p className="">Join thousands of students learning to code with US</p>
-//         <Button>Create free account →</Button>
-//       </div>
-//     </section>
-//   );
-// }
-
 "use client";
 
-import { Button } from "@heroui/react";
 import { Link } from "#/i18n/navigation";
 
 import { useTranslations } from "next-intl";
@@ -66,6 +49,7 @@ export default function CodingJourneyCTA() {
         {/* Интерактивная кнопка HeroUI v3 */}
         <Link
           href="/register"
+          suppressHydrationWarning
           className="button button--primary button--lg mt-4 bg-white font-medium text-[#2563eb] shadow-md hover:scale-[1.02] active:scale-[0.98] 
           transition-transform focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2"
         >

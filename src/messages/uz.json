@@ -23,8 +23,8 @@
   "LoginPage": {
     "title": "Ta'lim platformasi",
     "subtitle": "O'qishni davom ettirish uchun tizimga kiring",
-    "usernameLabel": "Username",
-    "usernamePlaceholder": "Username kiriting",
+    "usernameLabel": "Email",
+    "usernamePlaceholder": "Emailingizni kiriting",
     "passwordLabel": "Parol",
     "hidePassword": "Parolni yashirish",
     "showPassword": "Parolni ko'rsatish",

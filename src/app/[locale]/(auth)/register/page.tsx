@@ -7,7 +7,7 @@ import {
   Checkbox,
   InputGroup,
   Label,
-  TextField
+  TextField,
 } from "@heroui/react";
 import { Eye, EyeOff, GraduationCap, Lock, Mail, User } from "lucide-react";
 
@@ -28,7 +28,7 @@ export default function RegisterPage() {
     username: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -44,10 +44,10 @@ export default function RegisterPage() {
 
     try {
       await register({
-        username: form.username,
+        name: form.username,
         email: form.email,
         password: form.password,
-        role: "student"
+        role: "student",
       });
 
       router.replace("/dashboard");
@@ -82,10 +82,10 @@ export default function RegisterPage() {
 
               <InputGroup.Input
                 value={form.username}
-                onChange={e =>
-                  setForm(prev => ({
+                onChange={(e) =>
+                  setForm((prev) => ({
                     ...prev,
-                    username: e.target.value
+                    username: e.target.value,
                   }))
                 }
                 placeholder={t("fields.namePlaceholder")}
@@ -111,10 +111,10 @@ export default function RegisterPage() {
                 placeholder="you@example.com"
                 autoComplete="email"
                 value={form.email}
-                onChange={e =>
-                  setForm(prev => ({
+                onChange={(e) =>
+                  setForm((prev) => ({
                     ...prev,
-                    email: e.target.value
+                    email: e.target.value,
                   }))
                 }
               />
@@ -137,10 +137,10 @@ export default function RegisterPage() {
 
               <InputGroup.Input
                 value={form.password}
-                onChange={e =>
-                  setForm(prev => ({
+                onChange={(e) =>
+                  setForm((prev) => ({
                     ...prev,
-                    password: e.target.value
+                    password: e.target.value,
                   }))
                 }
                 type={isPasswordVisible ? "text" : "password"}
@@ -157,7 +157,7 @@ export default function RegisterPage() {
                       ? t("aria.hidePassword")
                       : t("aria.showPassword")
                   }
-                  onPress={() => setIsPasswordVisible(value => !value)}
+                  onPress={() => setIsPasswordVisible((value) => !value)}
                 >
                   {isPasswordVisible ? (
                     <EyeOff className="size-4" />
@@ -185,10 +185,10 @@ export default function RegisterPage() {
 
               <InputGroup.Input
                 value={form.confirmPassword}
-                onChange={e =>
-                  setForm(prev => ({
+                onChange={(e) =>
+                  setForm((prev) => ({
                     ...prev,
-                    confirmPassword: e.target.value
+                    confirmPassword: e.target.value,
                   }))
                 }
                 type={isConfirmPasswordVisible ? "text" : "password"}
@@ -205,7 +205,7 @@ export default function RegisterPage() {
                       ? t("aria.hideConfirmPassword")
                       : t("aria.showConfirmPassword")
                   }
-                  onPress={() => setIsConfirmPasswordVisible(value => !value)}
+                  onPress={() => setIsConfirmPasswordVisible((value) => !value)}
                 >
                   {isConfirmPasswordVisible ? (
                     <EyeOff className="size-4" />

@@ -20,7 +20,7 @@ export default function SideBar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
-  const initials = user?.username?.[0] || user?.email?.[0] || "?";
+  const initials = user?.name?.[0] || user?.email?.[0] || "?";
 
   // Закрывает Drawer при переходе по ссылкам
   const handleLinkClick = () => {
@@ -103,7 +103,7 @@ export default function SideBar() {
                         </Avatar>
                         <div className="flex flex-col overflow-hidden">
                           <p className="truncate text-sm font-medium leading-tight">
-                            {user.username || "User"}
+                            {user.name || "User"}
                           </p>
                           <p className="truncate text-xs text-default-500 leading-tight">
                             {user.email}

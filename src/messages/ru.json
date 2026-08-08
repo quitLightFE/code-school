@@ -23,8 +23,8 @@
   "LoginPage": {
     "title": "Платформа обучения",
     "subtitle": "Войдите в аккаунт, чтобы продолжить обучение",
-    "usernameLabel": "Имя пользователя",
-    "usernamePlaceholder": "Введите имя пользователя",
+    "usernameLabel": "Email",
+    "usernamePlaceholder": "Введите ваш email",
     "passwordLabel": "Пароль",
     "hidePassword": "Скрыть пароль",
     "showPassword": "Показать пароль",

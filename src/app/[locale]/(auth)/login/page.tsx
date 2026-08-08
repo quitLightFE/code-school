@@ -15,7 +15,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
     try {
       await login({
-        username,
+        email,
         password,
       });
 
@@ -67,9 +67,9 @@ export default function LoginPage() {
               <InputGroup.Input
                 type="text"
                 placeholder={t("usernamePlaceholder")}
-                autoComplete="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </InputGroup>
           </TextField>

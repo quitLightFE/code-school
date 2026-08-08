@@ -49,7 +49,7 @@ export function UserDropdown({
                 <Avatar.Fallback>{initials}</Avatar.Fallback>
               </Avatar>
               <div className="flex flex-col gap-0">
-                <p className="text-sm leading-5 font-medium">{user.username}</p>
+                <p className="text-sm leading-5 font-medium">{user.name}</p>
                 <p className="text-xs leading-none text-muted">{user.email}</p>
               </div>
             </div>

@@ -2,18 +2,18 @@ export type UserRole = "teacher" | "student";
 
 export interface User {
   id: number;
-  username: string;
+  name: string;
   email: string;
   role: UserRole;
 }
 
 export interface LoginDto {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface RegisterDto {
-  username: string;
+  name: string;
   email: string;
   password: string;
   role: UserRole;

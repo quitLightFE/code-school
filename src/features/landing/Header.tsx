@@ -11,7 +11,7 @@ import { UserDropdown } from "#/components/UserDropdown";
 export default function Header() {
   const { user, loading, logout } = useAuthContext();
 
-  const initials = user?.username?.slice(0, 2).toUpperCase() || "--";
+  const initials = user?.name?.slice(0, 2).toUpperCase() || "--";
 
   return (
     <header className="fixed inset-x-3 top-3 z-40 sm:inset-x-5 sm:top-5 max-w-200 mx-auto">

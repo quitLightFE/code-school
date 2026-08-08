@@ -200,7 +200,7 @@ export default function Footer() {
                 </p>
                 <a
                   href="mailto:hello@codeschool.ru"
-                  className="hover:text-blue-600 dark:hover:text-blue-500 transition-colors"
+                  className="hover:text-blue-600 dark:hover:text-blue-500 transition-colors wrap-break-word"
                 >
                   hello@codeschool.ru
                 </a>
