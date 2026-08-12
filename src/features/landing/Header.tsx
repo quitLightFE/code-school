@@ -15,17 +15,32 @@ export default function Header() {
 
   return (
     <header className="fixed inset-x-3 top-3 z-40 sm:inset-x-5 sm:top-5 max-w-200 mx-auto">
+      {/*  <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-tr from-violet-500 to-orange-300 p-6">
+        <!-- Карточка в стиле Glassmorphism --> 
+        <div className="w-full max-w-md rounded-2xl border border-white/20 bg-white/10 p-8 text-white shadow-xl backdrop-blur-md">
+          <h2 className="text-2xl font-bold mb-2">Эффект Glassmorphism</h2>
+          <p className="text-white/80 leading-relaxed">
+            Этот интерфейс создан с помощью чистого Tailwind CSS. Он использует
+            размытие заднего плана и полупрозрачные слои для имитации матового
+            стекла.
+          </p>
+          <button className="mt-6 w-full rounded-xl bg-white/20 py-3 font-semibold transition hover:bg-white/30 border border-white/10">
+            Действие
+          </button>
+        </div>
+      </div>*/}
+
       <div
         className={`
-          flex items-center justify-between
-          rounded-full
-          border border-white/10
-          bg-background/65
-          backdrop-blur-xl
-          shadow-xl
-          px-3 py-2
-          sm:px-6 sm:py-3
-        `}
+  flex items-center justify-between
+  rounded-full
+  border border-white/20
+  bg-gray-50/20
+  backdrop-blur-xl
+  shadow-xl
+  px-3 py-2
+  sm:px-6 sm:py-3
+`}
       >
         {/* Logo */}
         <Link

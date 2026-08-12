@@ -19,7 +19,7 @@ export default function HeroSection() {
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
         {/* ЛЕВАЯ КОЛОНКА: Контент и Действия */}
         <div className="lg:col-span-6 flex flex-col justify-center text-left">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
+          <h1 className="text-4xl text-foreground sm:text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
             {t("titleLine1")} <br />
             <span className="bg-linear-to-r from-blue-500 to-indigo-400 bg-clip-text text-transparent">
               {t("titleLine2")}

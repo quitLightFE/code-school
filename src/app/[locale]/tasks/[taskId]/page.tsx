@@ -1,37 +1,178 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
+import { useParams } from "next/navigation";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { Tabs, Button, Card } from "@heroui/react";
+import { Tabs, Button, Card, Chip } from "@heroui/react";
 import { useTheme } from "next-themes";
 import { emmetHTML, emmetCSS, emmetJSX } from "emmet-monaco-es";
-import { Trash2 } from "lucide-react";
+import {
+  Trash2,
+  Send,
+  Save,
+  ArrowLeft,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+} from "lucide-react";
 
-// Конфигурация вкладок для отрисовки в цикле
+import { Link } from "#/i18n/navigation";
+
+// ==== Типы, соответствующие схеме backend ====
+
+type Task = {
+  _id: string;
+  title: string;
+  description: string;
+  htmlStarter: string;
+  cssStarter: string;
+  jsStarter: string;
+  teacher: string;
+  group: string;
+};
+
+type SubmissionStatus =
+  | "not_started"
+  | "submitted"
+  | "in_review"
+  | "needs_revision"
+  | "accepted";
+
+type Submission = {
+  _id: string;
+  task: string;
+  student: string;
+  htmlCode: string;
+  cssCode: string;
+  jsCode: string;
+  teacherComment?: string;
+  score?: number;
+  status: SubmissionStatus;
+};
+
 const EDITORS_CONFIG = [
   { id: "html", label: "HTML", language: "html" },
   { id: "css", label: "CSS", language: "css" },
   { id: "js", label: "JavaScript", language: "javascript" },
 ] as const;
 
-export default function PlaygroundPage() {
-  const [html, setHtml] = useState(
-    `<h1>Hello World</h1>\n<p>Edit HTML here</p>`,
-  );
-  const [css, setCss] = useState(
-    `body { font-family: sans-serif; padding: 20px; }\nh1 { color: dodgerblue; }`,
-  );
-  const [js, setJs] = useState(
-    `console.log("Hello World");\nconsole.warn("This is a warning!");`,
-  );
+const statusMeta: Record<
+  SubmissionStatus,
+  {
+    label: string;
+    chipColor: "success" | "danger" | "warning" | "default";
+    icon: typeof CheckCircle2;
+  }
+> = {
+  not_started: { label: "Не начато", chipColor: "default", icon: Clock },
+  submitted: {
+    label: "Отправлено на проверку",
+    chipColor: "warning",
+    icon: Clock,
+  },
+  in_review: { label: "Проверяется", chipColor: "warning", icon: Clock },
+  needs_revision: {
+    label: "Нужны правки",
+    chipColor: "danger",
+    icon: AlertCircle,
+  },
+  accepted: { label: "Принято", chipColor: "success", icon: CheckCircle2 },
+};
+
+// ==== Заглушки API — замените на реальные запросы к backend ====
+
+async function fetchTask(taskId: string): Promise<Task> {
+  // TODO: заменить на реальный запрос, например:
+  // const res = await fetch(`/api/tasks/${taskId}`); return res.json();
+  return {
+    _id: taskId,
+    title: "Компонент списка задач",
+    description:
+      "Собери переиспользуемый компонент TaskList: рендер массива задач, чекбокс завершения, счётчик оставшихся пунктов.",
+    htmlStarter: `<h1>Hello World</h1>\n<p>Edit HTML here</p>`,
+    cssStarter: `body { font-family: sans-serif; padding: 20px; }\nh1 { color: dodgerblue; }`,
+    jsStarter: `console.log("Hello World");\nconsole.warn("This is a warning!");`,
+    teacher: "t1",
+    group: "g2",
+  };
+}
+
+async function fetchMySubmission(taskId: string): Promise<Submission | null> {
+  // TODO: заменить на реальный запрос, например:
+  // const res = await fetch(`/api/submissions?task=${taskId}&student=me`); return res.json();
+  return null; // студент ещё не сдавал это задание
+}
+
+async function saveSubmission(payload: {
+  task: string;
+  htmlCode: string;
+  cssCode: string;
+  jsCode: string;
+  status: SubmissionStatus;
+}): Promise<Submission> {
+  // TODO: заменить на реальный запрос, например:
+  // const res = await fetch(`/api/submissions`, { method: "POST", body: JSON.stringify(payload) });
+  // return res.json();
+  return {
+    _id: "mock-submission",
+    task: payload.task,
+    student: "u1",
+    htmlCode: payload.htmlCode,
+    cssCode: payload.cssCode,
+    jsCode: payload.jsCode,
+    status: payload.status,
+  };
+}
+
+export default function TaskPage() {
+  const params = useParams<{ taskId: string }>();
+  const taskId = params.taskId;
+
+  const [task, setTask] = useState<Task | null>(null);
+  const [submission, setSubmission] = useState<Submission | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const [html, setHtml] = useState("");
+  const [css, setCss] = useState("");
+  const [js, setJs] = useState("");
   const [preview, setPreview] = useState("");
 
-  // Состояния для консоли логов
   const [logs, setLogs] = useState<{ type: string; message: string }[]>([]);
   const [showLogs, setShowLogs] = useState(true);
 
   const { resolvedTheme } = useTheme();
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
+
+  // Загрузка задания и текущего решения студента
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      setIsLoading(true);
+      const [taskData, submissionData] = await Promise.all([
+        fetchTask(taskId),
+        fetchMySubmission(taskId),
+      ]);
+
+      if (cancelled) return;
+
+      setTask(taskData);
+      setSubmission(submissionData);
+
+      // Если студент уже начинал — подставляем его код, иначе — стартер из задания
+      setHtml(submissionData?.htmlCode ?? taskData.htmlStarter);
+      setCss(submissionData?.cssCode ?? taskData.cssStarter);
+      setJs(submissionData?.jsCode ?? taskData.jsStarter);
+
+      setIsLoading(false);
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [taskId]);
 
   // Перехват логов из iframe через postMessage
   useEffect(() => {
@@ -45,10 +186,7 @@ export default function PlaygroundPage() {
 
       setLogs((prev) => [
         ...prev,
-        {
-          type: event.data.type,
-          message: event.data.message,
-        },
+        { type: event.data.type, message: event.data.message },
       ]);
     };
 
@@ -56,17 +194,11 @@ export default function PlaygroundPage() {
     return () => window.removeEventListener("message", handleConsoleMessage);
   }, []);
 
-  //     window.addEventListener("message", handleConsoleMessage);
-  //     return () => window.removeEventListener("message", handleConsoleMessage);
-  //   }, []);
-
-  // Инициализация Emmet и кастомных тем для Monaco
   const handleEditorWillMount = (monaco: Monaco) => {
     emmetHTML(monaco, ["html"]);
     emmetCSS(monaco, ["css"]);
     emmetJSX(monaco, ["javascript"]);
 
-    // Настройка Тёмной Темы
     monaco.editor.defineTheme("heroui-dark", {
       base: "vs-dark",
       inherit: true,
@@ -87,7 +219,6 @@ export default function PlaygroundPage() {
       },
     });
 
-    // Настройка Светлой Темы
     monaco.editor.defineTheme("heroui-light", {
       base: "vs",
       inherit: true,
@@ -110,7 +241,6 @@ export default function PlaygroundPage() {
   };
 
   const srcDoc = useMemo(() => {
-    // Скрипт-перехватчик стандартных выводов консоли и синтаксических ошибок рантайма
     const consoleInterceptor = `
 <script>
 (function () {
@@ -190,16 +320,50 @@ console.clear = () => {
   }, [html, css, js]);
 
   function runPreview() {
-    setLogs([]); // Очищаем старые логи перед запуском новой сессии
+    setLogs([]);
     setPreview(srcDoc);
     setShowPreviewMobile(true);
   }
 
-  // Динамическое определение темы
+  // Сохранить черновик без отправки на проверку
+  const handleSaveDraft = useCallback(async () => {
+    if (!task) return;
+    setIsSaving(true);
+    try {
+      const saved = await saveSubmission({
+        task: task._id,
+        htmlCode: html,
+        cssCode: css,
+        jsCode: js,
+        status: submission?.status === "accepted" ? "accepted" : "not_started",
+      });
+      setSubmission(saved);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [task, html, css, js, submission]);
+
+  // Отправить решение преподавателю на проверку
+  const handleSubmitForReview = useCallback(async () => {
+    if (!task) return;
+    setIsSaving(true);
+    try {
+      const saved = await saveSubmission({
+        task: task._id,
+        htmlCode: html,
+        cssCode: css,
+        jsCode: js,
+        status: "submitted",
+      });
+      setSubmission(saved);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [task, html, css, js]);
+
   const editorTheme =
     resolvedTheme === "light" ? "heroui-light" : "heroui-dark";
 
-  // Хелпер для связи ID редактора с соответствующим состоянием
   const getEditorProps = (id: (typeof EDITORS_CONFIG)[number]["id"]) => {
     if (id === "html")
       return { value: html, onChange: (v: string) => setHtml(v) };
@@ -207,23 +371,63 @@ console.clear = () => {
     return { value: js, onChange: (v: string) => setJs(v) };
   };
 
+  if (isLoading || !task) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-zinc-950 pt-20">
+        <p className="text-sm text-zinc-400">Загрузка задания...</p>
+      </div>
+    );
+  }
+
+  const currentStatus = submission?.status ?? "not_started";
+  const meta = statusMeta[currentStatus];
+  const StatusIcon = meta.icon;
+  const isLocked = currentStatus === "accepted";
+
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-zinc-950 sm:pt-30 pt-20">
-      {/* Шапка */}
-      <div className="border-b border-zinc-200 p-4 dark:border-zinc-800">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
-            HTML / CSS / JS Playground
-          </h1>
-          <div className="flex gap-2">
-            {/* Кнопка скрытия/показа консоли */}
+      {/* Шапка с данными задания */}
+      <div className="border-b border-zinc-200 p-4 dark:border-zinc-800 space-y-3">
+        <Link
+          href={`/courses/${task.group}`}
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-default-500 hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="size-3.5" /> Назад к группе
+        </Link>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
+                {task.title}
+              </h1>
+              <Chip size="sm" color={meta.chipColor}>
+                <StatusIcon className="size-3" />
+                {meta.label}
+              </Chip>
+              {typeof submission?.score === "number" && (
+                <Chip size="sm" variant="secondary">
+                  Балл: {submission.score}
+                </Chip>
+              )}
+            </div>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-2xl">
+              {task.description}
+            </p>
+            {submission?.teacherComment && (
+              <p className="text-xs text-danger pt-1">
+                Комментарий преподавателя: {submission.teacherComment}
+              </p>
+            )}
+          </div>
+
+          <div className="flex gap-2 shrink-0 flex-wrap">
             <Button
               variant="outline"
               onPress={() => setShowLogs((prev) => !prev)}
             >
               {showLogs ? "Hide Logs" : "Show Logs"}
             </Button>
-
             <Button
               className="lg:hidden"
               variant="ghost"
@@ -232,6 +436,20 @@ console.clear = () => {
               {showPreviewMobile ? "Show Editor" : "Show Preview"}
             </Button>
             <Button onPress={runPreview}>Run Code</Button>
+            <Button
+              variant="outline"
+              onPress={handleSaveDraft}
+              isDisabled={isSaving || isLocked}
+            >
+              <Save className="size-3.5" /> Сохранить
+            </Button>
+            <Button
+              onPress={handleSubmitForReview}
+              isDisabled={isSaving || isLocked}
+            >
+              <Send className="size-3.5" />
+              {isSaving ? "Отправка..." : "Отправить на проверку"}
+            </Button>
           </div>
         </div>
       </div>
@@ -267,6 +485,7 @@ console.clear = () => {
                       minimap: { enabled: false },
                       fontSize: 15,
                       automaticLayout: true,
+                      readOnly: isLocked,
                     }}
                   />
                 </Tabs.Panel>
@@ -279,7 +498,6 @@ console.clear = () => {
         <div
           className={`flex flex-col gap-4 h-full min-h-0 ${showPreviewMobile ? "flex" : "hidden lg:flex"}`}
         >
-          {/* Карточка превью */}
           <Card className="flex-1 p-0 overflow-hidden">
             <iframe
               title="preview"
@@ -289,7 +507,6 @@ console.clear = () => {
             />
           </Card>
 
-          {/* Виртуальная консоль (скрывается/показывается по условию showLogs) */}
           {showLogs && (
             <Card className="h-48 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex flex-col p-0 overflow-hidden shrink-0">
               <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 px-3 py-1.5 bg-zinc-100 dark:bg-zinc-900 shrink-0">
