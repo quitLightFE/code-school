@@ -17,38 +17,12 @@ import {
 } from "lucide-react";
 
 import { Link } from "#/i18n/navigation";
+import { TaskService } from "#/services/tasks.service";
+import { SubmissionService } from "#/services/submissions.service";
+import { Submission } from "#/types/submissions";
+import { Task } from "#/types/tasks";
 
-// ==== Типы, соответствующие схеме backend ====
-
-type Task = {
-  _id: string;
-  title: string;
-  description: string;
-  htmlStarter: string;
-  cssStarter: string;
-  jsStarter: string;
-  teacher: string;
-  group: string;
-};
-
-type SubmissionStatus =
-  | "not_started"
-  | "submitted"
-  | "in_review"
-  | "needs_revision"
-  | "accepted";
-
-type Submission = {
-  _id: string;
-  task: string;
-  student: string;
-  htmlCode: string;
-  cssCode: string;
-  jsCode: string;
-  teacherComment?: string;
-  score?: number;
-  status: SubmissionStatus;
-};
+type DisplayStatus = "not_started" | "submitted" | "checked" | "returned";
 
 const EDITORS_CONFIG = [
   { id: "html", label: "HTML", language: "html" },
@@ -57,7 +31,7 @@ const EDITORS_CONFIG = [
 ] as const;
 
 const statusMeta: Record<
-  SubmissionStatus,
+  DisplayStatus,
   {
     label: string;
     chipColor: "success" | "danger" | "warning" | "default";
@@ -70,67 +44,18 @@ const statusMeta: Record<
     chipColor: "warning",
     icon: Clock,
   },
-  in_review: { label: "Проверяется", chipColor: "warning", icon: Clock },
-  needs_revision: {
-    label: "Нужны правки",
-    chipColor: "danger",
-    icon: AlertCircle,
-  },
-  accepted: { label: "Принято", chipColor: "success", icon: CheckCircle2 },
+  checked: { label: "Проверено", chipColor: "success", icon: CheckCircle2 },
+  returned: { label: "Нужны правки", chipColor: "danger", icon: AlertCircle },
 };
-
-// ==== Заглушки API — замените на реальные запросы к backend ====
-
-async function fetchTask(taskId: string): Promise<Task> {
-  // TODO: заменить на реальный запрос, например:
-  // const res = await fetch(`/api/tasks/${taskId}`); return res.json();
-  return {
-    _id: taskId,
-    title: "Компонент списка задач",
-    description:
-      "Собери переиспользуемый компонент TaskList: рендер массива задач, чекбокс завершения, счётчик оставшихся пунктов.",
-    htmlStarter: `<h1>Hello World</h1>\n<p>Edit HTML here</p>`,
-    cssStarter: `body { font-family: sans-serif; padding: 20px; }\nh1 { color: dodgerblue; }`,
-    jsStarter: `console.log("Hello World");\nconsole.warn("This is a warning!");`,
-    teacher: "t1",
-    group: "g2",
-  };
-}
-
-async function fetchMySubmission(taskId: string): Promise<Submission | null> {
-  // TODO: заменить на реальный запрос, например:
-  // const res = await fetch(`/api/submissions?task=${taskId}&student=me`); return res.json();
-  return null; // студент ещё не сдавал это задание
-}
-
-async function saveSubmission(payload: {
-  task: string;
-  htmlCode: string;
-  cssCode: string;
-  jsCode: string;
-  status: SubmissionStatus;
-}): Promise<Submission> {
-  // TODO: заменить на реальный запрос, например:
-  // const res = await fetch(`/api/submissions`, { method: "POST", body: JSON.stringify(payload) });
-  // return res.json();
-  return {
-    _id: "mock-submission",
-    task: payload.task,
-    student: "u1",
-    htmlCode: payload.htmlCode,
-    cssCode: payload.cssCode,
-    jsCode: payload.jsCode,
-    status: payload.status,
-  };
-}
 
 export default function TaskPage() {
   const params = useParams<{ taskId: string }>();
-  const taskId = params.taskId;
+  const taskId = Number(params.taskId);
 
   const [task, setTask] = useState<Task | null>(null);
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   const [html, setHtml] = useState("");
@@ -144,28 +69,31 @@ export default function TaskPage() {
   const { resolvedTheme } = useTheme();
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
 
-  // Загрузка задания и текущего решения студента
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
       setIsLoading(true);
-      const [taskData, submissionData] = await Promise.all([
-        fetchTask(taskId),
-        fetchMySubmission(taskId),
-      ]);
+      setLoadError(null);
+      try {
+        const [taskData, submissionData] = await Promise.all([
+          TaskService.get(taskId),
+          SubmissionService.findByTask(taskId),
+        ]);
 
-      if (cancelled) return;
+        if (cancelled) return;
 
-      setTask(taskData);
-      setSubmission(submissionData);
+        setTask(taskData);
+        setSubmission(submissionData);
 
-      // Если студент уже начинал — подставляем его код, иначе — стартер из задания
-      setHtml(submissionData?.htmlCode ?? taskData.htmlStarter);
-      setCss(submissionData?.cssCode ?? taskData.cssStarter);
-      setJs(submissionData?.jsCode ?? taskData.jsStarter);
-
-      setIsLoading(false);
+        setHtml(submissionData?.html_code ?? taskData.html_starter);
+        setCss(submissionData?.css_code ?? taskData.css_starter);
+        setJs(submissionData?.js_code ?? taskData.js_starter);
+      } catch {
+        if (!cancelled) setLoadError("Не удалось загрузить задание");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
     }
 
     load();
@@ -174,7 +102,6 @@ export default function TaskPage() {
     };
   }, [taskId]);
 
-  // Перехват логов из iframe через postMessage
   useEffect(() => {
     const handleConsoleMessage = (event: MessageEvent) => {
       if (event.data?.source !== "iframe-console") return;
@@ -244,29 +171,17 @@ export default function TaskPage() {
     const consoleInterceptor = `
 <script>
 (function () {
-  const original = {
-    log: console.log,
-    warn: console.warn,
-    error: console.error,
-    info: console.info,
-  };
-
+  const original = { log: console.log, warn: console.warn, error: console.error, info: console.info };
   const originalClear = console.clear;
 
-console.clear = () => {
-  window.parent.postMessage({
-    source: "iframe-console",
-    type: "clear",
-  }, "*");
-
-  originalClear();
-};
+  console.clear = () => {
+    window.parent.postMessage({ source: "iframe-console", type: "clear" }, "*");
+    originalClear();
+  };
 
   function serialize(value) {
     try {
-      if (typeof value === "object" && value !== null) {
-        return JSON.stringify(value, null, 2);
-      }
+      if (typeof value === "object" && value !== null) return JSON.stringify(value, null, 2);
       return String(value);
     } catch {
       return String(value);
@@ -274,11 +189,7 @@ console.clear = () => {
   }
 
   function send(type, args) {
-    window.parent.postMessage({
-      source: "iframe-console",
-      type,
-      message: args.map(serialize).join(" ")
-    }, "*");
+    window.parent.postMessage({ source: "iframe-console", type, message: args.map(serialize).join(" ") }, "*");
   }
 
   ["log", "warn", "error", "info"].forEach((type) => {
@@ -288,17 +199,12 @@ console.clear = () => {
     };
   });
 
-  window.onerror = function(message, source, line, column) {
-    send("error", [
-      message + " (" + line + ":" + column + ")"
-    ]);
+  window.onerror = function (message, source, line, column) {
+    send("error", [message + " (" + line + ":" + column + ")"]);
   };
 
   window.addEventListener("unhandledrejection", (event) => {
-    send("error", [
-      "Unhandled Promise Rejection:",
-      event.reason
-    ]);
+    send("error", ["Unhandled Promise Rejection:", event.reason]);
   });
 })();
 </script>
@@ -325,35 +231,31 @@ console.clear = () => {
     setShowPreviewMobile(true);
   }
 
-  // Сохранить черновик без отправки на проверку
   const handleSaveDraft = useCallback(async () => {
     if (!task) return;
     setIsSaving(true);
     try {
-      const saved = await saveSubmission({
-        task: task._id,
-        htmlCode: html,
-        cssCode: css,
-        jsCode: js,
-        status: submission?.status === "accepted" ? "accepted" : "not_started",
+      const saved = await SubmissionService.saveDraft({
+        task_id: task.id,
+        html_code: html,
+        css_code: css,
+        js_code: js,
       });
       setSubmission(saved);
     } finally {
       setIsSaving(false);
     }
-  }, [task, html, css, js, submission]);
+  }, [task, html, css, js]);
 
-  // Отправить решение преподавателю на проверку
   const handleSubmitForReview = useCallback(async () => {
     if (!task) return;
     setIsSaving(true);
     try {
-      const saved = await saveSubmission({
-        task: task._id,
-        htmlCode: html,
-        cssCode: css,
-        jsCode: js,
-        status: "submitted",
+      const saved = await SubmissionService.submitForReview({
+        task_id: task.id,
+        html_code: html,
+        css_code: css,
+        js_code: js,
       });
       setSubmission(saved);
     } finally {
@@ -371,7 +273,7 @@ console.clear = () => {
     return { value: js, onChange: (v: string) => setJs(v) };
   };
 
-  if (isLoading || !task) {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-white dark:bg-zinc-950 pt-20">
         <p className="text-sm text-zinc-400">Загрузка задания...</p>
@@ -379,17 +281,26 @@ console.clear = () => {
     );
   }
 
-  const currentStatus = submission?.status ?? "not_started";
+  if (loadError || !task) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-zinc-950 pt-20">
+        <p className="text-sm text-danger">
+          {loadError ?? "Задание не найдено"}
+        </p>
+      </div>
+    );
+  }
+
+  const currentStatus: DisplayStatus = submission?.status ?? "not_started";
   const meta = statusMeta[currentStatus];
   const StatusIcon = meta.icon;
-  const isLocked = currentStatus === "accepted";
+  const isLocked = currentStatus === "checked";
 
   return (
     <div className="flex h-screen flex-col bg-white dark:bg-zinc-950 sm:pt-30 pt-20">
-      {/* Шапка с данными задания */}
       <div className="border-b border-zinc-200 p-4 dark:border-zinc-800 space-y-3">
         <Link
-          href={`/courses/${task.group}`}
+          href={`/courses/${task.group.id}`}
           className="inline-flex items-center gap-1.5 text-xs font-medium text-default-500 hover:text-foreground transition-colors"
         >
           <ArrowLeft className="size-3.5" /> Назад к группе
@@ -414,9 +325,9 @@ console.clear = () => {
             <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-2xl">
               {task.description}
             </p>
-            {submission?.teacherComment && (
+            {submission?.teacher_comment && (
               <p className="text-xs text-danger pt-1">
-                Комментарий преподавателя: {submission.teacherComment}
+                Комментарий преподавателя: {submission.teacher_comment}
               </p>
             )}
           </div>
@@ -454,9 +365,7 @@ console.clear = () => {
         </div>
       </div>
 
-      {/* Контентная зона */}
       <div className="grid flex-1 gap-4 sm:p-4 lg:grid-cols-2 min-h-0 overflow-hidden">
-        {/* Панель редакторов */}
         <Card
           className={`p-0 overflow-hidden ${showPreviewMobile ? "hidden lg:block" : "block"}`}
         >
@@ -494,7 +403,6 @@ console.clear = () => {
           </Tabs>
         </Card>
 
-        {/* Правая колонка: Фрейм превью + Виртуальная консоль */}
         <div
           className={`flex flex-col gap-4 h-full min-h-0 ${showPreviewMobile ? "flex" : "hidden lg:flex"}`}
         >

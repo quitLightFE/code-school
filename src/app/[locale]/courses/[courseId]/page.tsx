@@ -7,157 +7,78 @@ import {
   ListChecks,
   Code2,
   CheckCircle2,
-  AlertCircle,
-  Clock,
+  RotateCcw,
+  Send,
 } from "lucide-react";
 
 import { Link } from "#/i18n/navigation";
-
-// Моки, соответствующие реальной схеме backend
-
-type Teacher = {
-  _id: string;
-  name: string;
-  avatar?: string;
-};
-
-type Group = {
-  _id: string;
-  name: string;
-  description: string;
-  teacher: Teacher;
-};
-
-type Task = {
-  _id: string;
-  title: string;
-  description: string;
-  group: string;
-};
-
-type Submission = {
-  _id: string;
-  task: string;
-  student: string;
-  status:
-    | "not_started"
-    | "submitted"
-    | "in_review"
-    | "needs_revision"
-    | "accepted";
-  score?: number;
-  teacherComment?: string;
-};
-
-const currentUser = { _id: "u1" };
-
-const mockGroups: Record<string, Group> = {
-  g2: {
-    _id: "g2",
-    name: "React & Next.js Pro",
-    description:
-      "Продвинутая разработка на Next.js 15, SSR, оптимизация и развертывание. Практические проекты, код-ревью, поддержка ментора на каждом этапе обучения.",
-    teacher: { _id: "t1", name: "Алишер Каримов" },
-  },
-};
-
-const mockTasks: Task[] = [
-  {
-    _id: "task1",
-    title: "Компонент списка задач",
-    description: "Собрать переиспользуемый компонент TaskList с фильтрацией.",
-    group: "g2",
-  },
-  {
-    _id: "task2",
-    title: "Оптимизация изображений next/image",
-    description: "Настроить lazy-loading и responsive-изображения.",
-    group: "g2",
-  },
-  {
-    _id: "task3",
-    title: "Настройка Middleware",
-    description: "Реализовать проверку авторизации на уровне middleware.",
-    group: "g2",
-  },
-  {
-    _id: "task4",
-    title: "Server Actions & формы",
-    description: "Форма обратной связи на Server Actions без API-роута.",
-    group: "g2",
-  },
-];
-
-const mySubmissions: Submission[] = [
-  { _id: "s1", task: "task1", student: "u1", status: "accepted", score: 95 },
-  { _id: "s2", task: "task2", student: "u1", status: "accepted", score: 88 },
-  {
-    _id: "s3",
-    task: "task3",
-    student: "u1",
-    status: "needs_revision",
-    teacherComment: "Проверь обработку ошибок в middleware",
-  },
-  { _id: "s4", task: "task4", student: "u1", status: "not_started" },
-];
+import { useApiQuery } from "#/hooks/useApiQuery";
+import { CourseService } from "#/services/courses.service";
+import { TaskService } from "#/services/tasks.service";
+import { SubmissionService } from "#/services/submissions.service";
+import type { SubmissionStatus } from "#/types/submissions";
 
 const statusMeta: Record<
-  Submission["status"],
+  SubmissionStatus,
   {
     label: string;
-    color: string;
     chipColor: "success" | "danger" | "warning" | "default";
     icon: typeof CheckCircle2;
   }
 > = {
-  not_started: {
-    label: "Не начато",
-    color: "text-default-500",
-    chipColor: "default",
-    icon: Clock,
-  },
-  submitted: {
-    label: "На проверке",
-    color: "text-primary",
-    chipColor: "default",
-    icon: Clock,
-  },
-  in_review: {
-    label: "Проверяется",
-    color: "text-primary",
-    chipColor: "default",
-    icon: Clock,
-  },
-  needs_revision: {
-    label: "Нужны правки",
-    color: "text-danger",
+  submitted: { label: "На проверке", chipColor: "warning", icon: Send },
+  checked: { label: "Проверено", chipColor: "success", icon: CheckCircle2 },
+  returned: {
+    label: "Возвращено на доработку",
     chipColor: "danger",
-    icon: AlertCircle,
-  },
-  accepted: {
-    label: "Принято",
-    color: "text-success",
-    chipColor: "success",
-    icon: CheckCircle2,
+    icon: RotateCcw,
   },
 };
 
 export default function CoursePage() {
   const params = useParams<{ courseId: string }>();
-  const group = mockGroups[params.courseId];
+  const groupId = params.courseId;
 
-  if (!group) {
+  const {
+    data: group,
+    isLoading: groupLoading,
+    error: groupError,
+  } = useApiQuery(() => CourseService.get(groupId), [groupId]);
+
+  const {
+    data: tasks,
+    isLoading: tasksLoading,
+    error: tasksError,
+  } = useApiQuery(() => TaskService.listByGroup(groupId), [groupId]);
+
+  const { data: submissions } = useApiQuery(() => SubmissionService.mine(), []);
+
+  const isLoading = groupLoading || tasksLoading;
+  const error = groupError || tasksError;
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-background px-4 pb-16 pt-28 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl space-y-4">
+          <div className="h-8 w-40 bg-default-100 rounded animate-pulse" />
+          <div className="h-24 bg-default-100 rounded animate-pulse" />
+          <div className="h-24 bg-default-100 rounded animate-pulse" />
+        </div>
+      </main>
+    );
+  }
+
+  if (error || !group) {
     return (
       <main className="min-h-screen bg-background px-4 pb-16 pt-28 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center py-20 space-y-3">
-          <p className="text-default-400 text-base">Группа не найдена.</p>
+          <p className="text-danger text-sm">{error ?? "Группа не найдена."}</p>
+          {/* <Button as={Link} href="/courses" size="sm" variant="secondary">
+            <ArrowLeft className="size-3.5" /> Назад к группам
+          </Button> */}
           <Link
-            // as={Link}
             href="/courses"
-            // size="sm"
-
-            // variant="secondary"
-            className={`button--sm button--secondary focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2 `}
+            className="button--sm button button--primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 inline-flex items-center gap-1.5 text-sm font-medium text-default-500 hover:text-foreground transition-colors"
           >
             <ArrowLeft className="size-3.5" /> Назад к группам
           </Link>
@@ -166,22 +87,32 @@ export default function CoursePage() {
     );
   }
 
-  const groupTasks = mockTasks.filter((t) => t.group === group._id);
-  const submissionByTask = Object.fromEntries(
-    mySubmissions.map((s) => [s.task, s]),
-  );
+  const groupTasks = tasks ?? [];
 
-  const acceptedCount = groupTasks.filter(
-    (t) => submissionByTask[t._id]?.status === "accepted",
+  // Последняя (актуальная) submission студента по каждому task
+  // const latestSubmissionByTask = new Map<
+  //   number,
+  //   (typeof submissions)[number]
+  // >();
+  // (submissions ?? []).forEach((s) => {
+  //   const existing = latestSubmissionByTask.get(s.task);
+  //   if (!existing || new Date(s.id) > new Date(existing.id)) {
+  //     latestSubmissionByTask.set(s.task, s);
+  //   }
+  // });
+  // стало
+  const submissionByTask = new Map((submissions ?? []).map((s) => [s.task, s]));
+
+  const checkedCount = groupTasks.filter(
+    (t) => submissionByTask.get(t.id)?.status === "checked",
   ).length;
   const progressPercent = groupTasks.length
-    ? Math.round((acceptedCount / groupTasks.length) * 100)
+    ? Math.round((checkedCount / groupTasks.length) * 100)
     : 0;
 
   return (
     <main className="min-h-screen bg-background px-4 pb-16 pt-28 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-5xl space-y-8">
-        {/* Навигация назад */}
         <Link
           href="/courses"
           className="inline-flex items-center gap-1.5 text-sm font-medium text-default-500 hover:text-foreground transition-colors"
@@ -189,22 +120,21 @@ export default function CoursePage() {
           <ArrowLeft className="size-3.5" /> Назад к группам
         </Link>
 
-        {/* Заголовок группы */}
         <section className="space-y-4">
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Avatar size="sm">
                   <Avatar.Image
-                    src={group.teacher.avatar}
-                    alt={group.teacher.name}
+                    src={group.teacher?.avatar}
+                    alt={group.teacher?.name}
                   />
                   <Avatar.Fallback>
-                    {group.teacher.name.slice(0, 2).toUpperCase()}
+                    {group.teacher?.name?.charAt(0)}
                   </Avatar.Fallback>
                 </Avatar>
                 <span className="text-sm font-medium text-default-500">
-                  {group.teacher.name}
+                  {group.teacher?.name}
                 </span>
               </div>
               <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
@@ -219,12 +149,11 @@ export default function CoursePage() {
             </div>
           </div>
 
-          {/* Прогресс по группе */}
           <Card className="border border-default-100 bg-default-50/30">
             <Card.Content className="p-4 space-y-2">
               <div className="flex justify-between text-xs font-medium">
                 <span className="text-default-400">
-                  Принято заданий: {acceptedCount}/{groupTasks.length}
+                  Проверено заданий: {checkedCount}/{groupTasks.length}
                 </span>
                 <span className="text-primary font-bold">
                   {progressPercent}%
@@ -241,7 +170,6 @@ export default function CoursePage() {
           </Card>
         </section>
 
-        {/* Список заданий группы */}
         <section className="space-y-4">
           <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <ListChecks className="size-5 text-primary" />
@@ -257,13 +185,13 @@ export default function CoursePage() {
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {groupTasks.map((task) => {
-                const submission = submissionByTask[task._id];
-                const meta = statusMeta[submission?.status ?? "not_started"];
-                const StatusIcon = meta.icon;
+                const submission = submissionByTask.get(task.id);
+                const meta = submission ? statusMeta[submission.status] : null;
+                const StatusIcon = meta?.icon;
 
                 return (
                   <Card
-                    key={task._id}
+                    key={task.id}
                     className="border border-default-100 hover:border-default-200 hover:shadow-md transition-all"
                   >
                     <Card.Content className="p-5 flex items-center justify-between gap-4 flex-wrap">
@@ -272,10 +200,14 @@ export default function CoursePage() {
                           <h3 className="text-base font-bold text-foreground">
                             {task.title}
                           </h3>
-                          <Chip size="sm" color={meta.chipColor}>
-                            <StatusIcon className="size-3" />
-                            {meta.label}
-                          </Chip>
+                          {meta ? (
+                            <Chip size="sm" color={meta.chipColor}>
+                              {StatusIcon && <StatusIcon className="size-3" />}
+                              {meta.label}
+                            </Chip>
+                          ) : (
+                            <Chip size="sm">Не начато</Chip>
+                          )}
                           {typeof submission?.score === "number" && (
                             <Chip size="sm" variant="secondary">
                               Балл: {submission.score}
@@ -285,34 +217,34 @@ export default function CoursePage() {
                         <p className="text-sm text-default-500 line-clamp-2">
                           {task.description}
                         </p>
-                        {submission?.teacherComment && (
-                          <p className={`text-xs pt-1 ${meta.color}`}>
+                        {submission?.teacher_comment && (
+                          <p className="text-xs text-danger pt-1">
                             Комментарий преподавателя:{" "}
-                            {submission.teacherComment}
+                            {submission.teacher_comment}
                           </p>
                         )}
                       </div>
 
-                      <Link
-                        // as={Link}
-                        href={`/tasks/${task._id}`}
-                        // size="sm"
-                        className={`button--sm button ${
-                          submission?.status === "accepted"
-                            ? "button--secondary"
-                            : "button--primary"
-                        } focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-500 focus-visible:outline-offset-2 `}
-                        // variant={
-                        //   submission?.status === "accepted"
-                        //     ? "secondary"
-                        //     : "primary"
-                        // }
-                      >
-                        {submission?.status === "accepted"
+                      {/* <Button as={Link} href={`/tasks/${task.id}`} size="sm">
+                        {submission?.status === "checked"
                           ? "Посмотреть решение"
-                          : submission?.status === "needs_revision"
+                          : submission?.status === "returned"
                             ? "Исправить"
-                            : "Открыть задание"}
+                            : submission
+                              ? "Продолжить"
+                              : "Начать"}
+                      </Button> */}
+                      <Link
+                        href={`/tasks/${task.id}`}
+                        className="w-full sm:w-auto button--sm button button--primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                      >
+                        {submission?.status === "checked"
+                          ? "Посмотреть решение"
+                          : submission?.status === "returned"
+                            ? "Исправить"
+                            : submission
+                              ? "Продолжить"
+                              : "Начать"}
                       </Link>
                     </Card.Content>
                   </Card>
