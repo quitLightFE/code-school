@@ -354,7 +354,7 @@ export default function TaskPage() {
             >
               <Save className="size-3.5" /> Сохранить
             </Button>
-            <Button
+            <Button 
               onPress={handleSubmitForReview}
               isDisabled={isSaving || isLocked}
             >
@@ -395,6 +395,7 @@ export default function TaskPage() {
                       fontSize: 15,
                       automaticLayout: true,
                       readOnly: isLocked,
+                      wordWrap: "on"
                     }}
                   />
                 </Tabs.Panel>
@@ -407,7 +408,7 @@ export default function TaskPage() {
           className={`flex flex-col gap-4 h-full min-h-0 ${showPreviewMobile ? "flex" : "hidden lg:flex"}`}
         >
           <Card className="flex-1 p-0 overflow-hidden">
-            <iframe
+            <iframe 
               title="preview"
               srcDoc={preview}
               sandbox="allow-scripts allow-modals"

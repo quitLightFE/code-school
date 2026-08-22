@@ -74,15 +74,19 @@ async function upsert(
     }
 
     const res = await api.post<Submission>("/submissions/", {
-      task_id: payload.task_id,
+      task: payload.task_id,
       ...body,
     });
     return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      // eslint-disable-next-line no-console
-      console.error("Submission validation error:", err.response?.data);
-    }
+  console.error("========== SUBMISSION ERROR ==========");
+  console.error("STATUS:", err.response?.status);
+  console.error("DATA:", err.response?.data);
+  console.error("REQUEST:", err.config?.data);
+  console.error("URL:", err.config?.url);
+  console.error("======================================");
+}
     throw err;
   }
 }
