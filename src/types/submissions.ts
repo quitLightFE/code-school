@@ -1,6 +1,6 @@
 import { TaskShort } from "#/types/tasks";
 
-export type SubmissionStatus = "submitted" | "checked" | "returned";
+export type SubmissionStatus = "draft" | "submitted" | "checked" | "returned";
 
 // export type Submission = {
 //   id: number;
