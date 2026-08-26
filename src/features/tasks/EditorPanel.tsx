@@ -33,6 +33,7 @@ export function EditorPanel({
           {EDITORS_CONFIG.map(({ id, label }) => (
             <Tabs.Tab key={id} id={id}>
               {label}
+              <Tabs.Indicator />
             </Tabs.Tab>
           ))}
         </Tabs.List>
